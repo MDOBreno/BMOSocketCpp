@@ -23,8 +23,6 @@
 #include <netinet/in.h>
 #include <iostream>
 #include <sstream>
-
-using namespace std;
  
 #define PORT 37716
 
@@ -59,10 +57,8 @@ class Communications{
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    Communications CommunicationsObj = Communications();
-    return 0;
-}
-/*
+    //Communications CommunicationsObj = Communications();
+    
   //ABRIR/Criar o Socket
     struct sockaddr_in saddr;                                  //Informações do Servidor [Como Endereço e Porta ultilizadas pelo Cliente]
     int opcao = 1;
@@ -73,7 +69,7 @@ int main(int argc, const char * argv[]) {
     int socketServer = socket(AF_INET, SOCK_STREAM, 0); //Cria e retorna o Número de socket desse servidor
     setsockopt(socketServer, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opcao, sizeof(opcao));
     if (socketServer == -1) {
-      cerr << "Não foi possível criar o Socket! Saindo" << endl;
+      std::cerr << "Não foi possível criar o Socket! Saindo" << std::endl;
       return -1;
     }
     
@@ -101,9 +97,6 @@ int main(int argc, const char * argv[]) {
     std::stringstream ss;
     ss << PORT;
     std::cout << "[Server] Listening in port " << ss.str() << std::endl;
-
-    socketCliente = accept(socketServer, (struct sockaddr*)&saddr, (socklen_t*)&saddrSize);
-    std::cout << "[Server] Client has successfully connected." << std::endl;
     
     // Evitar que o programa se encerre, mantendo o programa em listening
   //ENQUANTO(while) está recebendo mensagem, exibir o eco 'echo mensage' de volta pro cliente
@@ -119,10 +112,10 @@ int main(int argc, const char * argv[]) {
         memset(portaCliente, 0, NI_MAXSERV);
         //Tentando abaixo conseguir o nome da maquina do cliente. Caso não consiga(else) então trapaciamos! :D
         if (getnameinfo((sockaddr*)&caddr, sizeof(caddr), hostCliente, NI_MAXHOST, portaCliente, NI_MAXSERV, 0) == 0) {
-           cout << hostCliente << " conectado na porta " << portaCliente << endl;
+           std::cout << hostCliente << " conectado na porta " << portaCliente << std::endl;
         } else {
            inet_ntop(AF_INET, &caddr.sin_addr, hostCliente, NI_MAXHOST);    //NumericTOaString: Faz o contrario da inet_pton() que usamos antes
-           cout << hostCliente << " conectado na porta " << ntohs(caddr.sin_port) << endl;
+           std::cout << hostCliente << " conectado na porta " << ntohs(caddr.sin_port) << std::endl;
         }
         
         //Limpar o Buffer com seja lá o que havia na memoria anteriormente (ainda mais que estamos em um loop)
@@ -131,14 +124,14 @@ int main(int argc, const char * argv[]) {
         // Aguardando o cliente enviar a mensagem
         int tamanhoBytesDadosRecebidos = recv(socketCliente, buf, 4096, 0); //O ultimo argumento define como recv() trabalha para retornar os dados
         if (tamanhoBytesDadosRecebidos == -1) {
-           cerr << "Erro em receber mensagem. Saindo.." << endl;
+           std::cerr << "Erro em receber mensagem. Saindo.." << std::endl;
            break;
         }
         if (tamanhoBytesDadosRecebidos == 0) {
-           cout << "Cliente desconectado " << endl;
+           std::cout << "Cliente desconectado " << std::endl;
            break;
         }
-        cout << string(buf, 0, tamanhoBytesDadosRecebidos) << endl; //O segundo argumento representa a posição inicial que se deve iniciar.
+        std::cout << std::string(buf, 0, tamanhoBytesDadosRecebidos) << std::endl; //O segundo argumento representa a posição inicial que se deve iniciar.
 
         // Ecoa mensagem de volta para o cliente   [Faz o Inverso do recv()]
         send(socketCliente, buf, tamanhoBytesDadosRecebidos + 1, 0);    //O +1 é porque necessitamos ter um zero no final
@@ -149,4 +142,4 @@ int main(int argc, const char * argv[]) {
     
     
     return 0;
-}*/
+}
