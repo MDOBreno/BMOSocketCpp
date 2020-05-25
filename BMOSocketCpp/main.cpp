@@ -13,51 +13,20 @@
 #include <string.h>
 #include <string>
 
-#include <stdio.h>
 #include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
 
-#include <CoreFoundation/CoreFoundation.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
 #include <iostream>
 #include <sstream>
- 
+
+
 #define PORT 37716
 
-class Communications{
-    public:
-        int socketServer, socketCliente, valread;
-        struct sockaddr_in saddr;
-        int opcao = 1;
-        int saddrSize = sizeof(saddr);
-        char buffer[1024] = {0};
-
-    Communications(){
-        socketServer = socket(AF_INET, SOCK_STREAM, 0);
-        setsockopt(socketServer, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opcao, sizeof(opcao));
-
-        saddr.sin_family = AF_INET;
-        saddr.sin_addr.s_addr = INADDR_ANY;
-        saddr.sin_port = htons(PORT);
-
-        bind(socketServer, (struct sockaddr *)&saddr, sizeof(saddr));
-        listen(socketServer, 3);
-        
-        std::stringstream ss;
-        ss << PORT;
-        std::cout << "[Server] Listening in port " << ss.str() << std::endl;
-
-        socketCliente = accept(socketServer, (struct sockaddr *)&saddr, (socklen_t*)&saddrSize);
-        std::cout << "[Server] Client has successfully connected." << std::endl;
-    }
-};
 
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    //Communications CommunicationsObj = Communications();
+    
     
   //ABRIR/Criar o Socket
     struct sockaddr_in saddr;                                  //Informações do Servidor [Como Endereço e Porta ultilizadas pelo Cliente]
