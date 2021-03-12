@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		33246E63247235F4008B70C5 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33246E62247235F4008B70C5 /* main.cpp */; };
+		33E081DD25F6CD86005EC88D /* BMOSocketiOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E081DB25F6CD86005EC88D /* BMOSocketiOS.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		33246E5F247235F4008B70C5 /* BMOSocketCpp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BMOSocketCpp; sourceTree = BUILT_PRODUCTS_DIR; };
 		33246E62247235F4008B70C5 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		33E081DB25F6CD86005EC88D /* BMOSocketiOS.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BMOSocketiOS.cpp; sourceTree = "<group>"; };
+		33E081DC25F6CD86005EC88D /* BMOSocketiOS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BMOSocketiOS.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,8 @@
 			isa = PBXGroup;
 			children = (
 				33246E62247235F4008B70C5 /* main.cpp */,
+				33E081DB25F6CD86005EC88D /* BMOSocketiOS.cpp */,
+				33E081DC25F6CD86005EC88D /* BMOSocketiOS.hpp */,
 			);
 			path = BMOSocketCpp;
 			sourceTree = "<group>";
@@ -120,6 +125,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				33246E63247235F4008B70C5 /* main.cpp in Sources */,
+				33E081DD25F6CD86005EC88D /* BMOSocketiOS.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
