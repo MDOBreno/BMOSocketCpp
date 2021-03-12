@@ -12,7 +12,6 @@
 #include "BMOSocketiOS.hpp"
 
 
-
 int main(int argc, const char * argv[]) {
     // insert code here...
     
@@ -31,7 +30,6 @@ int main(int argc, const char * argv[]) {
     int opcao = 1;
     
     BMOSocketiOS bmo = BMOSocketiOS(saddr, opcao);
-    //std::cerr << "opcao:" <<  bmo.getOpcao() << " // saddrSize:" << bmo.saddrSize() << std::endl;
     
     
     // AF_INET=ipv4      e   AF_INET6=ipv6
@@ -39,8 +37,8 @@ int main(int argc, const char * argv[]) {
     // O terceiro argumento é para se desejassemos especificar algum protocolo
     int socketServer = bmo.criarSocketServidor(AF_INET, SOCK_STREAM, 0);
     if (socketServer == -1) {
-      std::cerr << "Não foi possível criar o Socket! Saindo" << std::endl;
-      return -1;
+        bmo.imprimir("Não foi possível criar o Socket! Saindo", true);
+        return -1;
     }
     
     bmo.startSocketServidor(portaSocketServidor, SOMAXCONN, 4096);

@@ -11,6 +11,7 @@
 BMOSocketiOS::BMOSocketiOS(struct sockaddr_in saddrInicial, int opcaoInicial) {
     saddr = saddrInicial;
     opcao = opcaoInicial;
+    ss.str("");
 }
 
 void BMOSocketiOS::setOpcao(int x) {
@@ -74,6 +75,10 @@ int BMOSocketiOS::getTamanhoBytesDoBuffer() {
 
 void BMOSocketiOS::startSocketServidor(int porta, int maxDeConexoes, int tamanhoBytesDoBuffer){
     
+    std::stringstream ssAuxiliar;
+    ssAuxiliar.str("");
+    
+    
     // CLIENTE
     struct sockaddr_in caddr;                           //Informações do Cliente [Como Endereço e Porta ultilizadas pelo Cliente]
     socklen_t caddrSize = sizeof caddr;                 // Tamanho em bytes das informações do cliente
@@ -92,7 +97,10 @@ void BMOSocketiOS::startSocketServidor(int porta, int maxDeConexoes, int tamanho
     //Print da escuta
     std::stringstream ss;
     ss << porta;
-    std::cout << "[Servidor] Escutando na porta " << ss.str() << std::endl;
+    
+    ssAuxiliar << "[Servidor] Escutando na porta " << ss.str();
+    imprimir(ssAuxiliar.str(), false);
+    ssAuxiliar.str("");
     
     
     
@@ -104,7 +112,7 @@ void BMOSocketiOS::startSocketServidor(int porta, int maxDeConexoes, int tamanho
     while (true) {
         // Aceitar conexões feitas, retornando um novo socket em que ha a nova conexao do servidor com o cliente
         socketCliente = accept(socketServidor, (struct sockaddr*)&caddr, (socklen_t*)&caddrSize);
-        std::cout << "[Servidor] Cliente conectado com sucesso." << std::endl;
+        imprimir("[Servidor] Cliente conectado com sucesso.", true);
         
         
         // Tentando descobrir o nome do Host-cliente
@@ -114,10 +122,18 @@ void BMOSocketiOS::startSocketServidor(int porta, int maxDeConexoes, int tamanho
         memset(portaCliente, 0, NI_MAXSERV);
         //Tentando abaixo conseguir o nome da maquina do cliente. Caso não consiga(else) então trapaciamos! :D
         if (getnameinfo((sockaddr*)&caddr, sizeof(caddr), hostCliente, NI_MAXHOST, portaCliente, NI_MAXSERV, 0) == 0) {
-           std::cout << " --> " << hostCliente << " conectado na porta " << portaCliente << std::endl;
+            
+            ssAuxiliar << " --> " << hostCliente << " conectado na porta " << portaCliente;
+            imprimir(ssAuxiliar.str(), true);
+            ssAuxiliar.str("");
+            
         } else {
            inet_ntop(AF_INET, &caddr.sin_addr, hostCliente, NI_MAXHOST);    //NumericTOaString: Faz o contrario da inet_pton() que usamos antes
-           std::cout << " --> " << hostCliente << " conectado na porta " << ntohs(caddr.sin_port) << std::endl;
+            
+            ssAuxiliar << " --> " << hostCliente << " conectado na porta " << ntohs(caddr.sin_port);
+            imprimir(ssAuxiliar.str(), true);
+            ssAuxiliar.str("");
+            
         }
         //Limpar o Buffer com seja lá o que havia na memoria anteriormente (ainda mais que estamos em um loop)
         memset(buff, 0, tamanhoBytesDoBuffer);
@@ -126,23 +142,46 @@ void BMOSocketiOS::startSocketServidor(int porta, int maxDeConexoes, int tamanho
         //Insere os dados(no buff) e Retorna o tamanho desses dados enviados pelo Cliente
         tamanhoBytesDadosRecebidos = recv(socketCliente, buff, tamanhoBytesDoBuffer, 0); //O ultimo argumento define como recv() trabalha para retornar os dados
         if (tamanhoBytesDadosRecebidos == -1) {
-           std::cerr << "Erro em receber mensagem. Saindo.." << std::endl;
-           break;
+            imprimir("Erro em receber mensagem. Saindo..", false);
+            break;
         }
         if (tamanhoBytesDadosRecebidos == 0) {
-           std::cout << "Cliente desconectado " << std::endl;
-           break;
+            imprimir("Cliente desconectado ", false);
+            break;
         }
         // Ecoa mensagem de volta para o cliente   [Faz o Inverso do recv()]
         send(socketCliente, buff, tamanhoBytesDadosRecebidos + 1, 0);    //O +1 é porque necessitamos ter um zero no final
         
         
         //'Print' no terminal
-        std::cout << std::string(buff, 0, tamanhoBytesDadosRecebidos) << std::endl; //O segundo argumento é a posição inicial que se deve comecar.
+        imprimir(std::string(buff, 0, tamanhoBytesDadosRecebidos), true); //O segundo argumento é a posição inicial que se deve comecar.
         
         
         //FECHAR/destruir o socket
         close(socketCliente);
     }
+    
 }
 
+void BMOSocketiOS::setSs(std::string x){
+    ss.str("");
+    ss << x;
+}
+
+std::string BMOSocketiOS::getSs(){
+    return ss.str();
+}
+
+void BMOSocketiOS::imprimir(std::string x, bool adicionarQuebraDeLinha){
+    if (adicionarQuebraDeLinha) {
+        ss << "\r\n";
+    }
+    ss << x;
+    std::cerr << x << std::endl;
+}
+
+std::string BMOSocketiOS::popSs(){
+    std::string retorno = ss.str();
+    ss.str("");
+    return retorno;
+}

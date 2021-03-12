@@ -25,6 +25,7 @@
 #include <iostream>
 #define PORTA 5000
 
+
 class BMOSocketiOS {
     public:
         BMOSocketiOS(struct sockaddr_in saddrSizeInicial, int opcaoInicial);
@@ -43,6 +44,10 @@ class BMOSocketiOS {
         void setTamanhoBytesDoBuffer(int x);
         int getTamanhoBytesDoBuffer();
         void startSocketServidor(int porta, int maxDeConexoes, int tamanhoBytesDoBuffer);
+        void setSs(std::string x);
+        std::string getSs();
+        void imprimir(std::string x, bool adicionarQuebraDeLinha);
+        std::string popSs();
     private:
         int opcao;
         struct sockaddr_in saddr;
@@ -50,6 +55,7 @@ class BMOSocketiOS {
         int porta;
         int maxDeConexoes;
         int tamanhoBytesDoBuffer;
+        std::stringstream ss;
 };
 
 
