@@ -9,7 +9,27 @@
 
 #include <iostream>
 
+#include <thread>
 #include "BMOSocketiOS.hpp"
+
+
+
+
+
+void cppLogToTextView(BMOSocketiOS *bmo){
+    std::stringstream tvTextView;
+    tvTextView.str("");
+    while (true) {
+        if (!(bmo->getSs()).empty()) {
+            tvTextView << bmo->popSs();
+        }
+    }
+}
+
+
+
+
+
 
 
 int main(int argc, const char * argv[]) {
@@ -41,7 +61,31 @@ int main(int argc, const char * argv[]) {
         return -1;
     }
     
-    bmo.startSocketServidor(portaSocketServidor, SOMAXCONN, 4096);
+    
+    
+    
+    // Thread cppLogToTextView in a function pointer
+    std::thread threadLogToTextView(cppLogToTextView, &bmo);
+    
+    
+    // Define startSocketServidor in a Lambda Expression
+    auto startSocketServidor = [=](BMOSocketiOS *bmo, int portaSocketServidor) {
+        (bmo->startSocketServidor(portaSocketServidor, SOMAXCONN, 4096));
+    };
+    // Thread for startSocketServidor
+    std::thread threadSocketServidor(startSocketServidor, &bmo, portaSocketServidor);
+    
+    
+    
+    
+  
+    threadLogToTextView.join();
+    
+    
+    threadSocketServidor.join();
+    
+    
+    
     
     
     return 0;
